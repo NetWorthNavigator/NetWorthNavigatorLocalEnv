@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Define the Plaid Quickstart GitHub repository URL and clone directory within the user's home directory
+PLAID_QUICKSTART_REPO="https://github.com/plaid/quickstart"
+CLONE_DIR="./plaid-quickstart"
+
+# Check if the directory does not exist
+if [ ! -d "$CLONE_DIR" ]; then
+    # Directory does not exist, clone the repository
+    git clone --depth 1 "$PLAID_QUICKSTART_REPO" "$CLONE_DIR" || { echo "Failed to clone repository."; exit 1; }
+else
+    echo "Directory $CLONE_DIR already exists. Skipping clone."
+fi
+
+# Navigate to the cloned directory
+cd "$CLONE_DIR"
+
+# Check if the .env file does not exist and copy the .env.example file to .env if true
+[ ! -f .env ] && cp .env.example .env || echo ".env file already exists."
+
+
+# Change port to 5000
+sed -i 's/8000:8000/5000:8000/g' docker-compose.yml
+
+# Run the setup script
+make up language=go
+
+echo "Local Plaid Quickstart environment setup complete."

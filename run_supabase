@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Define the Supabase GitHub repository URL and clone directory within the user's home directory
+SUPABASE_REPO="https://github.com/supabase/supabase"
+CLONE_DIR="./supabase"
+
+# Check if the directory does not exist
+if [ ! -d "supabase" ]; then
+    # Directory does not exist, clone the repository
+    git clone --depth 1 "$SUPABASE_REPO" || { echo "Failed to clone repository."; exit 1; }
+else
+    echo "Directory supabase already exists. Skipping clone."
+fi
+
+# Check if the Docker directory exists before navigating
+if [ -d "supabase/docker" ]; then
+    # Navigate to the Docker directory within the cloned repository
+    cd supabase/docker
+else
+    echo "Docker directory does not exist. Exiting."
+    exit 1
+fi
+
+# Copy the .env.example file to .env, no sudo required as this is in the user's home directory
+cp .env.example .env || { echo "Failed to copy .env file."; exit 1; }
+
+# Pull the latest Docker images
+docker compose pull
+
+# Start the services in detached mode
+docker compose up -d
+
+echo "Local Supabase environment setup complete."
