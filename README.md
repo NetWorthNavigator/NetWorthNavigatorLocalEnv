@@ -4,7 +4,7 @@ This guide will walk you through setting up the project environment, including t
 
 ## Initial Setup
 
-1. **Run the Automation Script**: Begin by running the `./setup_env` script from your terminal. This script setup_envs the initial setup process.
+1. **Run the Automation Script**: Begin by running the `./setup_env` script from your terminal. This script automates the initial setup process.
 
     ```bash
     ./setup_env
